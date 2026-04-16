@@ -47,11 +47,18 @@ Bash
 python gnwm_official_release.py --paradigm compositional
 Outputs: * exp1_factorized_ontology.png - Side-by-side semantic maps showing autonomous factorization of Object A and Object B.
 
-4. Combinatorial Generalization: 1D Circular Topologies (TSP)
-Evaluates the GNWM's capacity to act as a differentiable elastic net, unrolling discrete combinatorial logic using only continuous thermodynamic gradients. This script solves a 30-city Traveling Salesman Problem (TSP) using a 1D circular topology and Dynamic Tension Decay.
+4. Paradigm D: Abstract Semantic Topology
+Evaluates the architecture's capacity to act as a generalized causal mapping engine for non-spatial sequences. The network processes 40 unique continuous word embeddings governed by a rigid grammatical rule (Noun → Verb → Adjective → Object) and autonomously clusters them into a structured, discrete 2D ontology.
 
 bash
+python paradigm_D_semantics.py
+Outputs: * exp6_cognitive_topology.png - The clustered semantic grid demonstrating the geometric organization of abstract causal concepts.
+
+5. Combinatorial Generalization: 1D Circular Topologies (TSP)Evaluates the GNWM's capacity to act as a differentiable elastic net, unrolling discrete combinatorial logic using only continuous thermodynamic gradients. This script solves a 30-city Traveling Salesman Problem (TSP) using a 1D circular topology and Dynamic Tension Decay.
+
+Bash
 python gnwm_1d_tsp.py
+Outputs: * A pop-up matplotlib visualization displaying the discrete TSP tour mapped by the neural nodes, showcasing the final tension snap.Console logs detailing the simulated annealing, topological elasticity ($\sigma$), and loss metrics.
 
 📜 Citation
 If you find this code or the theoretical framework useful in your research, please cite:
