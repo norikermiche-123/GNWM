@@ -1,90 +1,65 @@
-Geometric Neural World Model (GNWM) 🌐
+# The Global Neural World Model (GNWM)
 
-Official codebase for the paper: "Self-Supervised World Models: Breaking Dimensional Collapse via Geometric Self-Organization"
+> **Official PyTorch Implementation of: "The Global Neural World Model: Spatially Grounded Discrete Topologies for Action-Conditioned Planning"**
 
-This repository contains the PyTorch implementations and empirical physics benchmarks demonstrating the failure modes of standard non-contrastive predictive architectures (like JEPA and BYOL) and introducing the Geometric Neural World Model (GNWM)—a mathematically principled approach to world modeling that utilizes topological self-organization to prevent dimensional collapse and achieve drift-free causal imagination.
+The GNWM is a self-stabilizing framework that achieves topological quantization through balanced continuous entropy constraints. Operating as an action-conditioned Joint-Embedding Predictive Architecture (JEPA), it maps continuous environments onto discrete 2D grids, enforcing translational equivariance without pixel-level reconstruction.
 
-🧠 The Core Problem: Predictive Perception $\neq$ World Models
+This repository contains the core training loops and plotting evaluations to reproduce the primary experiments from the paper, demonstrating drift-free topological tracking and compositional multi-object factorization.
 
-Current flagship implementations of self-supervised predictive architectures rely on deterministic $\mathcal{L}_2$ objectives to predict latent futures. However, minimizing an $\mathcal{L}_2$ distance inherently forces the predictor to converge to the conditional expectation of the target.
+## 🚀 Key Features
+* **Thermodynamic Equilibrium:** Replaces fragile anti-collapse heuristics (like EMA target networks or BYOL weight decay) with mathematically guaranteed expansion/contraction constraints.
+* **Fully Differentiable SOMs:** Upgrades classic Self-Organizing Maps with continuous differentiable probabilities, decoupling topology from activation for exact gradient flow.
+* **Drift-Free Imagination:** Employs "grid snapping" during inference to arrest manifold drift, acting as a native Error-Correction Code for long-horizon rollouts.
 
-In stochastic, multimodal physical environments, this causes the network to act as a spatial low-pass filter. It averages out diverging valid futures into a blurry, impossible superposition ("ghost mean"). To survive dimensional collapse, these models rely on unprincipled stabilization hacks like Batch Normalization, which inject severe gradient noise and fail to learn sharp causal boundaries.
+## 🛠️ Installation
 
-🚀 The Solution: Geometric Self-Organization & The Topological Quantizer
+Requirements: Python 3.8+ and PyTorch.
 
-The GNWM explicitly prevents collapse using strictly linear computational complexity ($\mathcal{O}(N \cdot D)$) via the Four Pillars of Geometric Self-Organization:
+```bash
+git clone [https://github.com/yourusername/GNWM.git](https://github.com/yourusername/GNWM.git)
+cd GNWM
+pip install -r requirements.txt
+(Dependencies: torch, numpy, matplotlib, opencv-python)
 
-Fixed Topological Convolution: Forces adjacent latent dimensions to activate together, creating a continuous "cortical sheet."
+🔬 Usage & Reproducing Paradigms
+The core script gnwm_official_release.py contains simulated 2D physics environments and the unified GNWM architecture. You can execute three distinct experimental paradigms:
 
-Collapse Prevention: Pulls the batch-mean towards a uniform center $C$, explicitly ensuring all neurons are utilized.
+1. Paradigm A: Passive Observation
+Evaluates the network's ability to map a continuous kinetic environment onto a discrete 15x15 topological grid without action labels or codebook collapse.
 
-Geometric Winner-Take-All (WTA): Pulls the unnormalized batch mean away from the uniform center, forcing individual sample representations to become sparse and orthogonal.
+Bash
+python gnwm_official_release.py --paradigm passive
+Outputs: * exp1_ontology.png - The quantized semantic map displaying generalized conceptual manifolds.
 
-Temporal Similarity: Anchors the predictor to true physical dynamics.
+exp4_stability.png - Evaluation of latent sharpness over 100-step autoregressive rollouts.
 
-By forcing continuous embeddings toward the orthogonal vertices of a probability simplex, GNWM acts as a Topological Quantizer, discretizing continuous physics into a finite vocabulary of causal states. This unlocks absolute interpretability and drift-free, infinite-horizon counterfactual planning.
+2. Paradigm B: Active Agent Control
+Evaluates the Action-Conditioned Spatial Predictor, demonstrating the generation of deterministic, orthogonal branches across the latent grid.
 
-📂 Repository Structure & Experiments
+Bash
+python gnwm_official_release.py --paradigm active
+Outputs: * exp3_imagination_tree.png - Visualizes the branching deterministic futures for the 4 available actions without hallucinating dead nodes.
 
-The codebase is split into four standalone, highly reproducible empirical proofs. Every script generates its own toy physics dataset on-the-fly and outputs publication-ready matplotlib figures.
+3. Paradigm C: Compositional Multi-Object Factorization
+Evaluates dimensionality reduction and dual-channel separation for a multi-entity scene.
 
-1. The Pathology of $\mathcal{L}_2$ Collapse
+Bash
+python gnwm_official_release.py --paradigm compositional
+Outputs: * exp1_factorized_ontology.png - Side-by-side semantic maps showing autonomous factorization of Object A and Object B.
 
-JEPA_Ablation_Study.py
+4. Combinatorial Generalization: 1D Circular Topologies (TSP)
+Evaluates the GNWM's capacity to act as a differentiable elastic net, unrolling discrete combinatorial logic using only continuous thermodynamic gradients. This script solves a 30-city Traveling Salesman Problem (TSP) using a 1D circular topology and Dynamic Tension Decay.
 
-What it does: Trains multiple architectural variants (Baseline, Batch-Normalized, Variance Penalty, Latent Diffusion) on a 2D physics dataset.
+bash
+python gnwm_1d_tsp.py
 
-Proves: Standard $\mathcal{L}_2$ architectures plummet to zero latent variance (Dimensional Collapse). Batch Normalization acts as an unprincipled hack that fails physics anomaly detection (Gravity Reversal).
+📜 Citation
+If you find this code or the theoretical framework useful in your research, please cite:
 
-2. The Causal Galton Board
-
-galton_board_experiment_2d.py
-
-What it does: Simulates a chaotic bifurcation conditioned on an action vector (Left or Right). Implements a 10x10 SOM cortical sheet.
-
-Proves: Baseline $\mathcal{L}_2$ models collapse diverging futures into a "Ghost Mean." GNWM correctly routes counterfactual futures to completely orthogonal topological neighborhoods.
-
-3. High-Dimensional Multi-Object Chaos
-
-causal_multi_object_som.py
-
-What it does: Scales GNWM to a massive 30x30 topological grid ($D=900$). Evaluates multi-body continuous physics with localized causal routing via Convolutional Predictors (CoordConv).
-
-Proves: GNWM achieves Judea Pearl's "Rung 2" of causation. By computing the Causal Delta between two imagined interventions, heavy static obstacles mathematically cancel out to $0.0$, demonstrating perfect hierarchical causal disentanglement.
-
-4. The Topological Quantizer (Semantic Map & Drift-Free Rollouts)
-
-topological_quantizer_demo.py
-
-What it does: Trains a 15x15 GNWM ($D=225$) with a thermodynamic warmup schedule.
-
-Proves: * Semantic Ontology: Extracts a human-readable 2D map of the environment's physical states directly from the latent "hot neurons."
-
-Drift-Free Rollouts: Performs a 50-step autoregressive rollout where standard models drift to blurriness by step 15, but GNWM maintains a perfectly flat latent standard deviation by actively purging floating-point noise via grid-snapping.
-
-🛠️ Installation & Usage
-
-This codebase is designed to be extremely lightweight and fast. It does not require massive GPU clusters to reproduce the core theoretical findings.
-
-Requirements
-
-pip install torch torchvision opencv-python numpy matplotlib
-
-
-Running the Experiments
-
-Simply run any of the standalone Python scripts. The dataset will be generated on-the-fly, the models will train (typically < 2 minutes on a standard GPU), and the resultant evaluation plots and heatmaps will be saved as .png files in your working directory.
-
-python topological_quantizer_demo.py
-
-
-📝 Citation
-
-If you find this codebase or theory useful in your research, please cite our manuscript:
-
-@article{gnwm2026,
-  title={Self-Supervised World Models: Breaking Dimensional Collapse via Geometric Self-Organization},
-  author={Your Name},
+Code snippet
+@article{kermiche2026gnwm,
+  title={The Global Neural World Model: Spatially Grounded Discrete Topologies for Action-Conditioned Planning},
+  author={Kermiche, Noureddine},
   journal={arXiv preprint},
   year={2026}
 }
